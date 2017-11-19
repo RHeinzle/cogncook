@@ -1,0 +1,33 @@
+page-search {
+  .pane {
+    background-color: color($colors, ebackground);
+  }
+
+  .search-wrapper {
+
+    background-color: color($colors, pearl);
+    font-family: 'MyriadPro-Regular';
+
+    .ingredient-list {
+      .button-delete {
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+      }
+    }
+
+    .options .item {
+      font-size: 1.36rem;
+      border: none !important;
+      border-bottom: 1px solid color($colors, light) !important;
+    }
+    .options .item:last-child {
+      border: none !important;
+    }
+    .options .item .item-inner {
+      border: none !important;
+    }
+
+  }
+
+}

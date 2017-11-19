@@ -1,0 +1,17 @@
+<!--
+  Generated template for the Scrolltabs component.
+
+  See https://angular.io/docs/ts/latest/api/core/index/ComponentMetadata-class.html
+  for more info on Angular 2 Components.
+-->
+
+<div class="scroll-tabs" [class.small]="type === 'small'">
+  <ion-scroll #scrollTab id="scrollTab" class="scroll-container" scrollX="true">
+    <div class="section" *ngFor="let tab of tabs; let i = index;" [class.last]="i === (tabs.length - 1)">
+      <button class="tab9-button" [class.three]="tabs.length<=3" [class.selected]="tab.selected" ion-button small clear (click)="tabChange(tab)">
+        {{tab.name}}
+      </button>
+      <div class="section-line" [class.selected]="tab.selected">&nbsp;</div>
+    </div>
+  </ion-scroll>
+</div>

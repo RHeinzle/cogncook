@@ -1,0 +1,71 @@
+.scroll-tabs {
+  height: 45px !important;
+  background-color: color($colors, pearl);
+  .scroll-container {
+    height: 45px;
+    overflow: scroll;
+    white-space: nowrap;
+    border-bottom: 1px solid color($colors, light);
+    background-color: color($colors, pearl);
+    .section {
+      min-width: 15vw;
+      display: inline-block;
+      white-space: nowrap;
+      overflow-x: scroll;
+      overflow-y: hidden;
+      padding-bottom: 0;
+      font-family: 'MyriadPro-Regular';
+      text-align: center;
+      .tab9-button {
+        font-family: 'MyriadPro-Regular';
+        border-radius: 0;
+        padding-bottom: 3px;
+        padding-left: 1px;
+        padding-right: 1px;
+        margin-right: 0;
+        margin-left: 5vw;
+        font-size: 1.48rem;
+        color: gray;
+        text-transform: uppercase !important;
+        height: 40px;
+      }
+      .tab9-button.selected {
+        color: color($colors, primary);
+      }
+      .section-line {
+        margin-top: -5px;
+        height: 1px;
+        width: 60% !important;
+        margin-left: 25%;
+        background-color: color($colors, pearl);
+      }
+      .section-line.selected {
+        background-color: color($colors, primary);
+      }
+      .tab9-button.three {
+        min-width: 26vw;
+      }
+    }
+    .section.last {
+      margin-right: 5vw;
+    }
+  }
+}
+.scroll-tabs.small {
+  height: 34px !important;
+  .scroll-container {
+    height: 34px;
+    .section {
+      .tab9-button {
+        font-size: 1.28rem;
+        height: 29px;
+      }
+      .tab9-button.selected {
+        border-bottom: 1px solid color($colors, primary);
+      }
+      .section-line {
+        width: 0% !important;
+      }
+    }
+  }
+}

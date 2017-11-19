@@ -1,0 +1,14 @@
+[
+    {
+        "id": 15001,
+        "original": "anchovy",
+        "name": "anchovy",
+        "amount": 2,
+        "unitShort": "servings",
+        "unitLong": "servings",
+        "consistency": "solid",
+        "aisle": "Canned and Jarred;Seafood",
+        "image": "https://spoonacular.com/cdn/ingredients_100x100/anchovies.jpg",
+        "meta": []
+    }
+]

@@ -1,0 +1,73 @@
+page-share {
+  .pane {
+    background: rgba(0, 0, 0, 0.320);
+    height: 100vh;
+  }
+  .cicle-ring {
+    position: fixed;
+    height: 300px;
+    width: 300px;
+    right: -150px;
+    bottom: 60px;
+    border: 40px solid rgba(0, 0, 0, 0.320);
+    border-radius: 50%;
+  }
+  .facebook {
+    position: fixed;
+    right: 41px;
+    bottom: 286px;
+    .facebook-button {
+      border-radius: 50%;
+      img {
+        width: 40px;
+        height: 40px;
+      }
+    }
+  }
+  .twitter {
+    position: fixed;
+    right: 92px;
+    bottom: 186px;
+    .twitter-button {
+      border-radius: 50%;
+      img {
+        width: 40px;
+        height: 40px;
+      }
+    }
+  }
+  .link {
+    position: fixed;
+    right: 40px;
+    bottom: 80px;
+    .link-button {
+      border-radius: 50%;
+      img {
+        width: 44px;
+        height: 44px;
+      }
+    }
+  }
+  .share-wrapper {
+    width: 68px;
+    height: 68px;
+    background-color: color($colors, primary);
+    position: fixed;
+    z-index: 1000;
+    right: 0;
+    bottom: 180px;
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    .share-button {
+      margin: 0 0 0 0;
+      padding: 0 0 0 0;
+      width: 68px;
+      height: 68px;
+      ion-icon {
+        font-size: 3rem;
+        color: color($colors, pearl);
+      }
+    }
+  }
+}

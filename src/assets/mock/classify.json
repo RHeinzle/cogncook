@@ -1,0 +1,77 @@
+{
+    "custom_classes": 0,
+    "images": [
+        {
+            "classifiers": [
+                {
+                    "classes": [
+                        {
+                            "class": "beefsteak tomato",
+                            "score": 0.716,
+                            "type_hierarchy": "/plant/vegetable/beefsteak tomato"
+                        },
+                        {
+                            "class": "vegetable",
+                            "score": 0.889
+                        },
+                        {
+                            "class": "plant",
+                            "score": 0.889
+                        },
+                        {
+                            "class": "plum tomato",
+                            "score": 0.701,
+                            "type_hierarchy": "/plant/vegetable/plum tomato"
+                        },
+                        {
+                            "class": "solanaceous vegetable",
+                            "score": 0.5,
+                            "type_hierarchy": "/plant/vegetable/solanaceous vegetable"
+                        },
+                        {
+                            "class": "reddish orange color",
+                            "score": 0.961
+                        },
+                        {
+                            "class": "greenishness color",
+                            "score": 0.728
+                        }
+                    ],
+                    "classifier_id": "default",
+                    "name": "default"
+                },
+                {
+                    "classes": [
+                        {
+                            "class": "tomato",
+                            "score": 0.987,
+                            "type_hierarchy": "/vegetable/tomato"
+                        },
+                        {
+                            "class": "vegetable",
+                            "score": 0.99
+                        },
+                        {
+                            "class": "beefsteak tomato",
+                            "score": 0.597,
+                            "type_hierarchy": "/vegetable/tomato/beefsteak tomato"
+                        },
+                        {
+                            "class": "plum tomato",
+                            "score": 0.5,
+                            "type_hierarchy": "/vegetable/tomato/cherry tomato/plum tomato"
+                        },
+                        {
+                            "class": "cherry tomato",
+                            "score": 0.639
+                        }
+                    ],
+                    "classifier_id": "food",
+                    "name": "food"
+                }
+            ],
+            "image": "Unknown.jpg"
+        }
+    ],
+    "images_processed": 1
+}

@@ -1,0 +1,65 @@
+<ion-header no-border>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon class="menu-icon" name="menu"></ion-icon>
+    </button>
+    <ion-title>
+        {{recipe.title}}
+    </ion-title>
+  </ion-navbar>
+  <scroll-tabs #scrollTab [tabs]="tabs" type="small" (onSelectedTab)="tabChange($event)"></scroll-tabs>
+</ion-header>
+
+<ion-content class="pane">
+  <div [ngSwitch]="selectedTab" (swipe)="swipeEvent($event)">
+
+    <div class="details-container">
+
+      <div class="details-image">
+          <img data-src="{{recipe.image}}">
+      </div>
+
+      <div class="details-info">
+        <ion-badge color="secondary"><ion-icon name="people"></ion-icon> {{recipe.servings}}</ion-badge>
+        <ion-badge class="right"><ion-icon name="time"></ion-icon> {{recipe.readyInMinutes}} min.</ion-badge>
+      </div>
+
+      <!-- TAB 0 -->
+      <div class="details-wrapper" *ngSwitchCase="tabs[0]">
+        <ol>
+          <li *ngFor="let instruction of recipe.instructions">
+              <p>{{instruction.step}}</p>
+          </li>
+        </ol>
+      </div>
+
+      <!-- TAB 1 -->
+      <div class="details-wrapper" *ngSwitchCase="tabs[1]">
+        <ion-list class="ingredient-list">
+          <ion-item *ngFor="let ingredient of recipe.ingredients">
+            <ion-thumbnail item-left>
+              <img [src]="ingredient.image">
+            </ion-thumbnail>
+            <h2>{{ingredient.name}}</h2>
+            <p><span>{{ingredient.amount}}</span> {{ingredient.unitShort}}</p>
+          </ion-item>
+        </ion-list>
+      </div>
+
+      <div class="details-wrapper" *ngSwitchCase="tabs[2]">
+        <ion-list class="nutrient-list">
+          <ion-item *ngFor="let nutrient of recipe?.nutrients">
+              <p><span class="title">{{nutrient.title}}</span> <span class="amount">{{nutrient.amount}} {{nutrient.unit}}</span></p>
+          </ion-item>
+        </ion-list>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="share-wrapper">
+    <button class="share-button" ion-button clear icon-only (click)="share()">
+      <ion-icon name="md-share"></ion-icon>
+    </button>
+  </div>
+</ion-content>

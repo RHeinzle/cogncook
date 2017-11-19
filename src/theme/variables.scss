@@ -1,0 +1,62 @@
+// Ionic Variables and Theming. For more info, please see:
+// http://ionicframework.com/docs/v2/theming/
+$font-path: "../assets/fonts";
+
+@import "ionic.globals";
+
+$colors: (
+  primary:      #c53b32,
+  secondary:    #eab3ae,
+  danger:       #f53d3d,
+  light:        #f4f4f4,
+  pearl:        #ffffff,
+  dark:         #474747,
+  gray:         #ababab,
+  eorange:      #ffba00,
+  eyellow:      #ffc000,
+  ebackground:  #f1f1f1
+);
+
+// App Theme
+// --------------------------------------------------
+// Ionic apps can have different themes applied, which can
+// then be future customized. This import comes last
+// so that the above variables are used and Ionic's
+// default are overridden.
+
+@import "ionic.theme.default";
+
+
+// Ionicons
+// --------------------------------------------------
+// The premium icon font for Ionic. For more info, please see:
+// http://ionicframework.com/docs/v2/ionicons/
+
+@import "ionic.ionicons";
+
+
+// Fonts
+// --------------------------------------------------
+
+@import "roboto";
+@import "noto-sans";
+
+$toolbar-background: color($colors, primary);
+$toolbar-border-color: transparent;
+$searchbar-ios-input-search-icon-color: color($colors, primary);
+$searchbar-md-input-search-icon-color: color($colors, primary);
+
+ion-menu[type=overlay] {
+  .menu-inner {
+    width: 100% !important;
+    background: transparent !important;
+  }
+}
+
+.menu-icon {
+  font-size: 3rem;
+}
+
+.menu-logo {
+  height: 38px;
+}

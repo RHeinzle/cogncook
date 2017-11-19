@@ -1,0 +1,30 @@
+<ion-header no-border>
+  <ion-toolbar>
+    <button ion-button menuToggle>
+      <ion-icon class="menu-icon" name="menu"></ion-icon>
+    </button>
+    <ion-title>
+      Favorite Recipes
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="pane">
+
+  <ion-card class="recipe-card" *ngFor="let recipe of recipes">
+    <ion-thumbnail>
+        <img data-src="{{ recipe.image }}" (click)="goToDetails(recipe.id)">
+    </ion-thumbnail>
+    <div class="favorite-wrapper">
+      <button [class.favorite]="recipe.favorite" ion-button icon-only (click)="favoriteToggle(recipe)">
+        <ion-icon name="heart"></ion-icon>
+      </button>
+    </div>
+    <ion-card-content>
+      <div class="recipe-name">
+        {{recipe.title}}
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

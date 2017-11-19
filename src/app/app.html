@@ -1,0 +1,28 @@
+<ion-menu class="page-menu pane" [content]="content">
+
+  <ion-header>
+  </ion-header>
+
+  <ion-content class="pane">
+    <div class="menu-container">
+      <div class="menu-buttons">
+        <div class="button-wrapper" *ngFor="let page of pages">
+          <button ion-button [class.inactive]="!isActive(page)" (click)="openPage(page)">
+            <ion-icon [name]="page.icon"></ion-icon>
+          </button>
+          <div class="button-title">{{page.name}}</div>
+        </div>
+      </div>
+      <div class="menu-space">
+        <div class="close-wrapper">
+          <button ion-button icon-only (click)="close()">
+            <ion-icon name="close"></ion-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </ion-content>
+
+</ion-menu>
+
+<ion-nav [root]="rootPage" #content swipeBackEnabled="false"></ion-nav>

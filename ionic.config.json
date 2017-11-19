@@ -1,0 +1,8 @@
+{
+  "name": "nicefood",
+  "app_id": "46457259",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "ionic-angular"
+}
