@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, AlertController, LoadingController, Loading } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Database } from '../../providers/database';
 import { Cuisine } from '../../model/cuisine';
@@ -32,8 +32,11 @@ export class Search {
   ingredients: Array<Ingredient>;
   ingredient: string;
 
+  loading: Loading;
+
   constructor(private navCtrl: NavController,
               private alertCtrl: AlertController,
+              private loadingCtrl: LoadingController,
               private db: Database,
               private camera: Camera,
               private spoonacular: SpoonacularService,
@@ -52,8 +55,10 @@ export class Search {
   }
 
   getIngredient(ingredient: string) {
+    this.presentLoading('Searching for ingredient...');
     this.spoonacular.getIngredient(ingredient).subscribe(
       data => {
+        this.dismissLoading();
         this.addIngredient(data);
       },
       err => console.error(err),
@@ -62,12 +67,14 @@ export class Search {
   }
 
   getRecipes() {
+      this.presentLoading('Searching for recipes...');
       this.spoonacular.getRecipes(this.helper.join(this.ingredients.map(ingredients => ingredients.name)),
                                   this.cuisine.name,
                                   this.diet.name,
                                   this.helper.join(this.intolerances.map(intolerances => intolerances.name))
                                 ).subscribe(
           data => {
+              this.dismissLoading();
               this.recipes = data;
               this.recipes.forEach(recipe => {
                 let exists = this.db.favoriteRecipes.some(function (element) {
@@ -88,7 +95,6 @@ export class Search {
       sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
       correctOrientation: true
     }
-
     this.camera.getPicture(options).then(
       imageData => {
         this.classify(imageData);
@@ -101,7 +107,6 @@ export class Search {
     const options: CameraOptions = {
       correctOrientation: true
     }
-
     this.camera.getPicture(options).then(
       imageData => {
         this.classify(imageData);
@@ -111,9 +116,11 @@ export class Search {
   }
 
   goToDetails(recipeId: number) {
+      this.presentLoading('Please wait...');
       this.spoonacular.getDetails(recipeId).subscribe(
           data => {
-              this.navCtrl.push('Details', { recipe: data });
+            this.dismissLoading();
+            this.navCtrl.push('Details', { recipe: data });
           },
           err => console.error(err),
           () => console.log('getDetails completed')
@@ -122,7 +129,6 @@ export class Search {
 
   favoriteToggle(recipe: Recipe) {
     recipe.favorite = !recipe.favorite;
-
     if (recipe.favorite) {
       this.db.addFavoriteRecipe(recipe);
     } else {
@@ -146,19 +152,21 @@ export class Search {
   }
 
   private classify(imageData: string) {
+    this.presentLoading('Classifying image...');
     this.watson.classify(imageData).then(
-        classes => {
-          if (classes.length > 1) {
-            let ingredients = new Array<string>();
-            classes.forEach(c => {
-                ingredients.push(this.helper.capitalizeFirstLetter(c.class));
-            });
-            this.chooseIngredient(ingredients);
-          } else {
-            this.getIngredient(classes[0].class);
-          }
-        },
-        err => console.error(err)
+      classes => {
+        this.dismissLoading();
+        if (classes.length > 1) {
+          let ingredients = new Array<string>();
+          classes.forEach(c => {
+              ingredients.push(this.helper.capitalizeFirstLetter(c.class));
+          });
+          this.chooseIngredient(ingredients);
+        } else {
+          this.getIngredient(classes[0].class);
+        }
+      },
+      err => console.error(err)
     );
   }
 
@@ -166,7 +174,7 @@ export class Search {
     let inputs = new Array<Object>();
     ingredients.forEach(ingredient => {
       inputs.push({
-        type:'radio',
+        type: 'radio',
         label: ingredient,
         value: ingredient,
       });
@@ -187,6 +195,17 @@ export class Search {
       }]
     });
     return prompt.present();
+  }
+
+  private presentLoading(content: string) {
+    this.loading = this.loadingCtrl.create({
+      content: content
+    });
+    this.loading.present();
+  }
+
+  private dismissLoading() {
+    this.loading.dismiss();
   }
 
 }

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController } from 'ionic-angular';
+import { IonicPage, NavController, Loading } from 'ionic-angular';
 import { Database } from '../../providers/database';
 import { Recipe } from '../../model/recipe';
 import { SpoonacularService } from '../../services/spoonacular';
@@ -13,6 +13,7 @@ import { SpoonacularService } from '../../services/spoonacular';
 export class Favorite {
 
   recipes: Array<Recipe>;
+  loading: Loading;
 
   constructor(private navCtrl: NavController,
               private db: Database,
@@ -34,13 +35,26 @@ export class Favorite {
   }
 
   goToDetails(recipeId: number) {
+      this.presentLoading('Please wait...');
       this.spoonacular.getDetails(recipeId).subscribe(
           data => {
-              this.navCtrl.push('Details', { recipe: data });
+            this.dismissLoading();
+            this.navCtrl.push('Details', { recipe: data });
           },
           err => console.error(err),
           () => console.log('getDetails completed')
       );
+  }
+
+  private presentLoading(content: string) {
+    this.loading = this.loadingCtrl.create({
+      content: content
+    });
+    this.loading.present();
+  }
+
+  private dismissLoading() {
+    this.loading.dismiss();
   }
 
 }
