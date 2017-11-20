@@ -100,7 +100,7 @@ export class SpoonacularService {
 
         return this.http.post(url, params.toString(), {headers: this.headers}).map(data => {
             let result = data.json()[0];
-            if (typeof result !== 'undefined' && result.id) {
+            if (result !== null && result.id) {
               let ingredient = new Ingredient();
               ingredient.id = result.id;
               ingredient.name = result.name;

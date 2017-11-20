@@ -98,4 +98,5 @@
     <plugin name="cordova-plugin-x-socialsharing" spec="^5.1.8" />
     <plugin name="ionic-plugin-keyboard" spec="^2.2.1" />
     <plugin name="cordova-plugin-file-transfer" spec="^1.7.0" />
+    <allow-navigation href="http://192.168.15.2:8100" />
 </widget>

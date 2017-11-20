@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { URLSearchParams } from '@angular/http';
 import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
-// import { File } from '@ionic-native/file';
-import { Helper } from './helper';
 import 'rxjs/Rx';
 
 @Injectable()
@@ -12,87 +10,51 @@ export class WatsonService {
     private static readonly key: string = 'e45c7957f9c679f72b5ef00972c7c4bbdfd78e92';
     private static readonly version: string = '2016-05-20'
 
-    constructor(private http: Http,
-                private transfer: FileTransfer,
-                // private file: File
-                private helper: Helper,
+    constructor(private transfer: FileTransfer
               ) {
-
-          // const fileTransfer: FileTransferObject = this.transfer.create();
 
     }
 
-    // TODO melhorar regras de classificadores
-    // classify(pictures) {
-    //     const endpoint = '/v3/classify';
-    //     const classifierIds = ['food','default'];
-    //
-    //     let params = `?api_key=${WatsonService.key}&version=${WatsonService.version}&classifier_ids=${this.helper.join(classifierIds)}`;
-    //
-    //     var fileName = pictures[0].substring(pictures[0].lastIndexOf('/')+1);
-    //           var json=  {
-    //             "id":123,
-    //             "name" :fileName
-    //           }
-    //         var fileUploadOptions = new FileUploadOptions();
-    //          fileUploadOptions.fileKey="file";
-    //          fileUploadOptions.fileName = fileName;
-    //          fileUploadOptions.params = {
-    //            json : json
-    //          };
-    //          fileUploadOptions.mimeType="image/jpeg";
-    //          var URL = WatsonService.host + endpoint + params;
-    //          var encodedURI = encodeURI(URL);
-    //          console.log('fileUploadOptions : ',fileUploadOptions);
-    //          var ft = new FileTransfer();
-    //          ft.upload(imageUrl, encodedURI, onSuccess, onError, fileUploadOptions, false);
-    //
-    //          function onSuccess(response){
-    //           console.log('file uploaded: ',response);
-    //          }
-    //          function onError(error){
-    //            console.log('upload failed',error);
-    //          }
-    // }
-
-    upload(imageData): Promise<string> {
+    classify(imageData): Promise<any> {
       const endpoint = '/v3/classify';
-      const classifierIds = ['food','default'];
-      let params = `?api_key=${WatsonService.key}&version=${WatsonService.version}&classifier_ids=${this.helper.join(classifierIds)}`;
-      let url = WatsonService.host + endpoint + params;
+      const classifierId = 'food';
 
-      console.log("Image:" + encodeURI(imageData));
-      console.log("URL: " + url);
+      let params = new URLSearchParams();
+      params.set('api_key', WatsonService.key);
+      params.set('version', WatsonService.version);
+      params.set('classifier_ids', classifierId);
+
+      let url = WatsonService.host + endpoint + "?" + params.toString();
 
       const fileTransfer: FileTransferObject = this.transfer.create();
-
       const options: FileUploadOptions = {
          fileKey: 'images_file',
          headers: {'Accept-Language': 'en'}
       }
-
       return fileTransfer.upload(encodeURI(imageData), url, options)
        .then(
          data => {
            console.log(data.response);
-           return data.response;
+           let result = JSON.parse(data.response);
+           let classes = this.filterClasses(result.images[0].classifiers[0]);
+
+           if (classes.length == 0) {
+             throw new Error("Image couldn't be recognized");
+           }
+           return classes;
          },
          err => {
-           console.log(err.body);
+           console.error(err)
          }
        );
     }
 
-    classifyMock(imageData) {
-        /*TESTE*/
-        return this.http.get('assets/mock/classify.json').map(data => {
-            let imageData = data.json().images[0];
-            let classifier = imageData.classifiers.filter(function(classifier) {
-                return classifier.name == 'food';
-            });
-            let ingredient = classifier[0].classes[0].class;
-            return ingredient;
-        });
+    private filterClasses(classifier) {
+      const minScore = 0.5;
+      return classifier.classes.filter(function(classe) {
+        return (classe.score > minScore && classe.class !== 'non-food');
+      });
+
     }
 
 }

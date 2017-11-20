@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController } from 'ionic-angular';
+import { IonicPage, NavController, AlertController } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Database } from '../../providers/database';
 import { Cuisine } from '../../model/cuisine';
@@ -32,9 +32,8 @@ export class Search {
   ingredients: Array<Ingredient>;
   ingredient: string;
 
-  image: any;
-
   constructor(private navCtrl: NavController,
+              private alertCtrl: AlertController,
               private db: Database,
               private camera: Camera,
               private spoonacular: SpoonacularService,
@@ -52,24 +51,14 @@ export class Search {
     this.ingredients = new Array<Ingredient>();
   }
 
-  favoriteToggle(recipe: Recipe) {
-    recipe.favorite = !recipe.favorite;
-
-    if (recipe.favorite) {
-      this.db.addFavoriteRecipe(recipe);
-    } else {
-      this.db.removeFavoriteRecipe(recipe);
-    }
-  }
-
-  goToDetails(recipeId: number) {
-      this.spoonacular.getDetails(recipeId).subscribe(
-          data => {
-              this.navCtrl.push('Details', { recipe: data });
-          },
-          err => console.error(err),
-          () => console.log('getDetails completed')
-      );
+  getIngredient(ingredient: string) {
+    this.spoonacular.getIngredient(ingredient).subscribe(
+      data => {
+        this.addIngredient(data);
+      },
+      err => console.error(err),
+      () => console.log('getIngredient completed')
+    );
   }
 
   getRecipes() {
@@ -81,7 +70,7 @@ export class Search {
           data => {
               this.recipes = data;
               this.recipes.forEach(recipe => {
-                var exists = this.db.favoriteRecipes.some(function (element) {
+                let exists = this.db.favoriteRecipes.some(function (element) {
                     return element.id === recipe.id;
                 });
                 if (exists) {
@@ -94,20 +83,60 @@ export class Search {
       );
   }
 
-  getIngredient(ingredient: string) {
-      if (ingredient) {
-          this.spoonacular.getIngredient(ingredient).subscribe(
-              data => {
-                  this.addIngredient(data);
-              },
-              err => console.error(err),
-              () => console.log('getIngredient completed')
-          );
-      }
+  getImage() {
+    const options: CameraOptions = {
+      sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
+      correctOrientation: true
+    }
+
+    this.camera.getPicture(options).then(
+      imageData => {
+        this.classify(imageData);
+      },
+      err => console.error(err)
+    );
   }
 
-  addIngredient(ingredient: Ingredient) {
-      var exists = this.ingredients.some(function (element) {
+  getCamera() {
+    const options: CameraOptions = {
+      correctOrientation: true
+    }
+
+    this.camera.getPicture(options).then(
+      imageData => {
+        this.classify(imageData);
+      },
+      err => console.error(err)
+    );
+  }
+
+  goToDetails(recipeId: number) {
+      this.spoonacular.getDetails(recipeId).subscribe(
+          data => {
+              this.navCtrl.push('Details', { recipe: data });
+          },
+          err => console.error(err),
+          () => console.log('getDetails completed')
+      );
+  }
+
+  favoriteToggle(recipe: Recipe) {
+    recipe.favorite = !recipe.favorite;
+
+    if (recipe.favorite) {
+      this.db.addFavoriteRecipe(recipe);
+    } else {
+      this.db.removeFavoriteRecipe(recipe);
+    }
+  }
+
+  removeIngredient(ingredient: Ingredient) {
+      let index = this.ingredients.indexOf(ingredient);
+      this.ingredients.splice(index, 1);
+  }
+
+  private addIngredient(ingredient: Ingredient) {
+      let exists = this.ingredients.some(function (element) {
           return element.id === ingredient.id;
       });
       if (!exists) {
@@ -116,54 +145,48 @@ export class Search {
       this.ingredient = '';
   }
 
-  removeIngredient(ingredient: Ingredient) {
-      let index = this.ingredients.indexOf(ingredient);
-      this.ingredients.splice(index, 1);
-  }
-
-
-  getImage() {
-    const options: CameraOptions = {
-      quality: 100,
-      sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
-      // destinationType: 0, // TODO tirar fora
-      correctOrientation: true
-    }
-
-    this.camera.getPicture(options).then(
-      imageData => {
-            this.watson.upload(imageData).then(
-                ingredient => {
-                    this.getIngredient(ingredient);
-                },
-                err => {
-                  console.log("aqui2");
-                  console.error(err.message);
-                }
-            );
+  private classify(imageData: string) {
+    this.watson.classify(imageData).then(
+        classes => {
+          if (classes.length > 1) {
+            let ingredients = new Array<string>();
+            classes.forEach(c => {
+                ingredients.push(this.helper.capitalizeFirstLetter(c.class));
+            });
+            this.chooseIngredient(ingredients);
+          } else {
+            this.getIngredient(classes[0].class);
+          }
         },
-        err => {
-          console.error(err);
-        }
+        err => console.error(err)
     );
   }
 
-  getCamera() {
-    // const options: CameraOptions = {
-    //   quality: 100,
-    //   // destinationType: 0, // TODO tirar fora
-    //   correctOrientation: true
-    // }
-
-    // this.camera.getPicture(options).then(
-    //   imageData => {
-    //     let base64Image = 'url(data:image/jpeg;base64,' + imageData + ')';
-    //       this.zone.run(() => {
-    //         this.image = base64Image;
-    //       });
-    //     },
-    //     err => console.error(err)
-    // );
+  private chooseIngredient(ingredients: Array<string>) {
+    let inputs = new Array<Object>();
+    ingredients.forEach(ingredient => {
+      inputs.push({
+        type:'radio',
+        label: ingredient,
+        value: ingredient,
+      });
+    });
+    let prompt = this.alertCtrl.create({
+      title: 'Choose the right option',
+      inputs: inputs,
+      buttons: [
+      {
+          text: "Cancel",
+          handler: data => {}
+      },
+      {
+          text: "Ok",
+          handler: data => {
+            this.getIngredient(data);
+          }
+      }]
+    });
+    return prompt.present();
   }
 
 }

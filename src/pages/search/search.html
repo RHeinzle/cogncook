@@ -21,7 +21,7 @@
       <button class="action-button" ion-button small icon-only item-right (touchstart)="getCamera()">
         <ion-icon name="ios-camera"></ion-icon>
       </button>
-      <button class="action-button" ion-button small icon-only item-right (touchstart)="getIngredient()" [disabled]="!ingredient">
+      <button class="action-button" ion-button small icon-only item-right (touchstart)="getIngredient(ingredient)" [disabled]="!ingredient">
         <ion-icon name="ios-paper-plane"></ion-icon>
       </button>
     </ion-item>
