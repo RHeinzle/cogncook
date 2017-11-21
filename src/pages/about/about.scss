@@ -13,8 +13,10 @@ page-about {
   span.red {
     color: #8b0000;
   }
-  span.green {
+  span.green,
+  span.green a {
     color: #006400;
+    text-decoration: none;
   }
 
 }
