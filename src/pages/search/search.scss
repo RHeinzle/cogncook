@@ -2,12 +2,9 @@ page-search {
   .pane {
     background-color: color($colors, ebackground);
   }
-
   .search-wrapper {
-
     background-color: color($colors, pearl);
     font-family: 'MyriadPro-Regular';
-
     .ingredient-list {
       .button-delete {
           width: 32px;
@@ -15,7 +12,6 @@ page-search {
           border-radius: 50%;
       }
     }
-
     .options .item {
       font-size: 1.36rem;
       border: none !important;

@@ -27,7 +27,7 @@ export class MyApp {
     this.pages = [
       { title: 'Search', component: 'Search', icon: 'search' },
       { title: 'Favorite', component: 'Favorite', icon: 'heart' },
-      { title: 'About', component: 'Settings', icon: 'information-circle' },
+      { title: 'About', component: 'About', icon: 'information-circle' },
     ];
   }
 

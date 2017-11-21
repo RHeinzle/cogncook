@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, Loading } from 'ionic-angular';
+import { IonicPage, NavController, LoadingController, Loading } from 'ionic-angular';
 import { Database } from '../../providers/database';
 import { Recipe } from '../../model/recipe';
 import { SpoonacularService } from '../../services/spoonacular';
@@ -16,6 +16,7 @@ export class Favorite {
   loading: Loading;
 
   constructor(private navCtrl: NavController,
+              private loadingCtrl: LoadingController,
               private db: Database,
               private spoonacular: SpoonacularService) {
   }

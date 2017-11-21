@@ -38,43 +38,36 @@
       </ion-item>
     </ion-list>
 
+    <ion-list>
+      <ion-list-header>
+        Options
+      </ion-list-header>
 
-      <ion-list>
-        <ion-list-header>
-          Options
-        </ion-list-header>
-
-        <div class="options">
-
-          <ion-item>
-            <ion-label>Cuisine</ion-label>
-            <ion-select [(ngModel)]="cuisine">
-              <ion-option *ngFor="let c of cuisineOptions" [value]="c">{{c.name}}</ion-option>
-            </ion-select>
-          </ion-item>
-
-          <ion-item>
-            <ion-label>Diet</ion-label>
-            <ion-select [(ngModel)]="diet">
-              <ion-option *ngFor="let d of dietOptions" [value]="d">{{d.name}}</ion-option>
-            </ion-select>
-          </ion-item>
-
-          <ion-item>
-            <ion-label>Intolerances</ion-label>
-            <ion-select [(ngModel)]="intolerances" multiple="true">
-              <ion-option *ngFor="let i of intoleranceOptions" [value]="i">{{i.name}}</ion-option>
-            </ion-select>
-          </ion-item>
-
-          <ion-item>
-            <button ion-button small full color="primary" (click)="getRecipes()" [disabled]="!ingredients.length">I'm Hungry!</button>
-          </ion-item>
-
-          </div>
+      <div class="options">
+        <ion-item>
+          <ion-label>Cuisine</ion-label>
+          <ion-select [(ngModel)]="cuisine">
+            <ion-option *ngFor="let c of cuisineOptions" [value]="c">{{c.name}}</ion-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label>Diet</ion-label>
+          <ion-select [(ngModel)]="diet">
+            <ion-option *ngFor="let d of dietOptions" [value]="d">{{d.name}}</ion-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label>Intolerances</ion-label>
+          <ion-select [(ngModel)]="intolerances" multiple="true">
+            <ion-option *ngFor="let i of intoleranceOptions" [value]="i">{{i.name}}</ion-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <button ion-button small full color="primary" (click)="getRecipes()" [disabled]="!ingredients.length">I'm Hungry!</button>
+        </ion-item>
+      </div>
 
     </ion-list>
-
   </div>
 
   <ion-card class="recipe-card" *ngFor="let recipe of recipes">
