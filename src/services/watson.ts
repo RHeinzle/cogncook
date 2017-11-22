@@ -31,8 +31,7 @@ export class WatsonService {
          fileKey: 'images_file',
          headers: {'Accept-Language': 'en'}
       }
-      return fileTransfer.upload(encodeURI(imageData), url, options)
-       .then(
+      return fileTransfer.upload(encodeURI(imageData), url, options).then(
          data => {
            console.log(data.response);
            let result = JSON.parse(data.response);

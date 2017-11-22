@@ -39,11 +39,10 @@ export class Favorite {
       this.presentLoading('Please wait...');
       this.spoonacular.getDetails(recipeId).subscribe(
           data => {
-            this.dismissLoading();
             this.navCtrl.push('Details', { recipe: data });
           },
           err => console.error(err),
-          () => console.log('getDetails completed')
+          () => this.dismissLoading()
       );
   }
 

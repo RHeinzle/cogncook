@@ -3,13 +3,13 @@ export class Ingredient {
   private _id: number;
   private _name: string;
   private _image: string;
-  private _amount: string;
+  private _amount: number;
   private _unitShort: string;
 
   constructor();
-  constructor(id: number, name: string, image: string, amount: string, unitShort: string);
+  constructor(id: number, name: string, image: string, amount: number, unitShort: string);
 
-  constructor(id?: number, name?: string, image?: string, amount?: string, unitShort?: string) {
+  constructor(id?: number, name?: string, image?: string, amount?: number, unitShort?: string) {
     this.id = id;
     this.name = name;
     this.image = image;
@@ -38,10 +38,10 @@ export class Ingredient {
     this._image = image;
   }
 
-  get amount(): string {
+  get amount(): number {
     return this._amount;
   }
-  set amount(amount: string) {
+  set amount(amount: number) {
     this._amount = amount;
   }
 

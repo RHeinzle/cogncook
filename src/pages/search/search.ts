@@ -58,11 +58,10 @@ export class Search {
     this.presentLoading('Searching for ingredient...');
     this.spoonacular.getIngredient(ingredient).subscribe(
       data => {
-        this.dismissLoading();
         this.addIngredient(data);
       },
       err => console.error(err),
-      () => console.log('getIngredient completed')
+      () => this.dismissLoading()
     );
   }
 
@@ -74,7 +73,6 @@ export class Search {
                                   this.helper.join(this.intolerances.map(intolerances => intolerances.name))
                                 ).subscribe(
           data => {
-              this.dismissLoading();
               this.recipes = data;
               this.recipes.forEach(recipe => {
                 let exists = this.db.favoriteRecipes.some(function (element) {
@@ -86,7 +84,7 @@ export class Search {
               })
           },
           err => console.error(err),
-          () => console.log('getRecipes completed')
+          () => this.dismissLoading()
       );
   }
 
@@ -119,11 +117,10 @@ export class Search {
       this.presentLoading('Please wait...');
       this.spoonacular.getDetails(recipeId).subscribe(
           data => {
-            this.dismissLoading();
             this.navCtrl.push('Details', { recipe: data });
           },
           err => console.error(err),
-          () => console.log('getDetails completed')
+          () => this.dismissLoading()
       );
   }
 
@@ -166,7 +163,20 @@ export class Search {
           this.getIngredient(classes[0].class);
         }
       },
-      err => console.error(err)
+      err => {
+        console.error(err);
+        this.dismissLoading();
+        let alert = this.alertCtrl.create({
+          title: "Sorry, the image couldn't be recognized",
+          buttons: [
+            {
+              text: 'Ok',
+              handler: () => {}
+            }
+          ]
+        });
+        alert.present();
+      }
     );
   }
 
@@ -183,18 +193,19 @@ export class Search {
       title: 'Choose the right option',
       inputs: inputs,
       buttons: [
-      {
-          text: "Cancel",
+        {
+          text: 'Cancel',
           handler: data => {}
-      },
-      {
-          text: "Ok",
+        },
+        {
+          text: 'Ok',
           handler: data => {
             this.getIngredient(data);
           }
-      }]
+        }
+      ]
     });
-    return prompt.present();
+    prompt.present();
   }
 
   private presentLoading(content: string) {
