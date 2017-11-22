@@ -4,8 +4,7 @@ import { Ingredient } from '../model/ingredient';
 import { Instruction } from '../model/instruction';
 import { Nutrient } from '../model/nutrient';
 import { Recipe } from '../model/recipe';
-
-import 'rxjs/Rx';
+import { Observable } from 'rxjs/Rx';
 
 @Injectable()
 export class SpoonacularService {
@@ -19,7 +18,7 @@ export class SpoonacularService {
       this.headers.append('X-Mashape-Key', SpoonacularService.key);
     }
 
-    getRecipes(ingredients: string, cuisine: string, diet: string, intolerances: string) {
+    getRecipes(ingredients: string, cuisine: string, diet: string, intolerances: string): Observable<Array<Recipe>> {
       const endpoint = '/recipes/searchComplex';
 
       let params = new URLSearchParams();
@@ -49,7 +48,7 @@ export class SpoonacularService {
       });
     }
 
-    getDetails(recipeId: number) {
+    getDetails(recipeId: number): Observable<Recipe> {
         const endpoint = `/recipes/${recipeId}/information`;
 
         let params = new URLSearchParams();
@@ -88,7 +87,7 @@ export class SpoonacularService {
         });
     }
 
-    getIngredient(ingredient: string) {
+    getIngredient(ingredient: string): Observable<Ingredient> {
         const endpoint = '/recipes/parseIngredients';
         const url = SpoonacularService.host + endpoint;
 

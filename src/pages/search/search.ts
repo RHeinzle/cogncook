@@ -54,6 +54,31 @@ export class Search {
     this.ingredients = new Array<Ingredient>();
   }
 
+  getCamera() {
+    const options: CameraOptions = {
+      correctOrientation: true
+    }
+    this.camera.getPicture(options).then(
+      imageURI => {
+        this.classify(imageURI);
+      },
+      err => console.error(err)
+    );
+  }
+
+  getImage() {
+    const options: CameraOptions = {
+      sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
+      correctOrientation: true
+    }
+    this.camera.getPicture(options).then(
+      imageURI => {
+        this.classify(imageURI);
+      },
+      err => console.error(err)
+    );
+  }
+
   getIngredient(ingredient: string) {
     this.presentLoading('Searching for ingredient...');
     this.spoonacular.getIngredient(ingredient).subscribe(
@@ -88,29 +113,13 @@ export class Search {
       );
   }
 
-  getImage() {
-    const options: CameraOptions = {
-      sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
-      correctOrientation: true
+  favoriteToggle(recipe: Recipe) {
+    recipe.favorite = !recipe.favorite;
+    if (recipe.favorite) {
+      this.db.addFavoriteRecipe(recipe);
+    } else {
+      this.db.removeFavoriteRecipe(recipe);
     }
-    this.camera.getPicture(options).then(
-      imageData => {
-        this.classify(imageData);
-      },
-      err => console.error(err)
-    );
-  }
-
-  getCamera() {
-    const options: CameraOptions = {
-      correctOrientation: true
-    }
-    this.camera.getPicture(options).then(
-      imageData => {
-        this.classify(imageData);
-      },
-      err => console.error(err)
-    );
   }
 
   goToDetails(recipeId: number) {
@@ -122,15 +131,6 @@ export class Search {
           err => console.error(err),
           () => this.dismissLoading()
       );
-  }
-
-  favoriteToggle(recipe: Recipe) {
-    recipe.favorite = !recipe.favorite;
-    if (recipe.favorite) {
-      this.db.addFavoriteRecipe(recipe);
-    } else {
-      this.db.removeFavoriteRecipe(recipe);
-    }
   }
 
   removeIngredient(ingredient: Ingredient) {
@@ -148,9 +148,9 @@ export class Search {
       this.ingredient = '';
   }
 
-  private classify(imageData: string) {
+  private classify(imageURI: string) {
     this.presentLoading('Classifying image...');
-    this.watson.classify(imageData).then(
+    this.watson.classify(imageURI).then(
       classes => {
         this.dismissLoading();
         if (classes.length > 1) {

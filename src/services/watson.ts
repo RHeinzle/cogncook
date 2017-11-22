@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { URLSearchParams } from '@angular/http';
 import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
-import 'rxjs/Rx';
 
 @Injectable()
 export class WatsonService {
@@ -10,12 +9,10 @@ export class WatsonService {
     private static readonly key: string = 'e45c7957f9c679f72b5ef00972c7c4bbdfd78e92';
     private static readonly version: string = '2016-05-20'
 
-    constructor(private transfer: FileTransfer
-              ) {
-
+    constructor(private transfer: FileTransfer) {
     }
 
-    classify(imageData): Promise<any> {
+    classify(imageURI): Promise<any> {
       const endpoint = '/v3/classify';
       const classifierId = 'food';
 
@@ -31,7 +28,7 @@ export class WatsonService {
          fileKey: 'images_file',
          headers: {'Accept-Language': 'en'}
       }
-      return fileTransfer.upload(encodeURI(imageData), url, options).then(
+      return fileTransfer.upload(encodeURI(imageURI), url, options).then(
          data => {
            console.log(data.response);
            let result = JSON.parse(data.response);
