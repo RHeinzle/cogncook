@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, AlertController, LoadingController, Loading } from 'ionic-angular';
+import { IonicPage, NavController } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Database } from '../../providers/database';
 import { Cuisine } from '../../model/cuisine';
@@ -32,11 +32,7 @@ export class Search {
   ingredients: Array<Ingredient>;
   ingredient: string;
 
-  loading: Loading;
-
   constructor(private navCtrl: NavController,
-              private alertCtrl: AlertController,
-              private loadingCtrl: LoadingController,
               private db: Database,
               private camera: Camera,
               private spoonacular: SpoonacularService,
@@ -56,7 +52,7 @@ export class Search {
 
   getCamera() {
     const options: CameraOptions = {
-      correctOrientation: true
+      correctOrientation: false
     }
     this.camera.getPicture(options).then(
       imageURI => {
@@ -80,18 +76,21 @@ export class Search {
   }
 
   getIngredient(ingredient: string) {
-    this.presentLoading('Searching for ingredient...');
+    this.helper.showLoading('Searching for ingredient...');
     this.spoonacular.getIngredient(ingredient).subscribe(
       data => {
         this.addIngredient(data);
       },
-      err => console.error(err),
-      () => this.dismissLoading()
+      err => {
+        this.helper.dismissLoading();
+        this.helper.showAlert("Sorry, the ingredient couldn't be found");
+      },
+      () => this.helper.dismissLoading()
     );
   }
 
   getRecipes() {
-      this.presentLoading('Searching for recipes...');
+      this.helper.showLoading('Searching for recipes...');
       this.spoonacular.getRecipes(this.helper.join(this.ingredients.map(ingredients => ingredients.name)),
                                   this.cuisine.name,
                                   this.diet.name,
@@ -101,15 +100,17 @@ export class Search {
               this.recipes = data;
               this.recipes.forEach(recipe => {
                 let exists = this.db.favoriteRecipes.some(function (element) {
-                    return element.id === recipe.id;
+                    return element.id == recipe.id;
                 });
                 if (exists) {
                   recipe.favorite = true;
                 }
               })
           },
-          err => console.error(err),
-          () => this.dismissLoading()
+          err => {
+            this.helper.dismissLoading();
+          },
+          () => this.helper.dismissLoading()
       );
   }
 
@@ -123,13 +124,15 @@ export class Search {
   }
 
   goToDetails(recipeId: number) {
-      this.presentLoading('Please wait...');
+      this.helper.showLoading('Please wait...');
       this.spoonacular.getDetails(recipeId).subscribe(
           data => {
             this.navCtrl.push('Details', { recipe: data });
           },
-          err => console.error(err),
-          () => this.dismissLoading()
+          err => {
+            this.helper.dismissLoading();
+          },
+          () => this.helper.dismissLoading()
       );
   }
 
@@ -140,7 +143,7 @@ export class Search {
 
   private addIngredient(ingredient: Ingredient) {
       let exists = this.ingredients.some(function (element) {
-          return element.id === ingredient.id;
+          return element.id == ingredient.id;
       });
       if (!exists) {
           this.ingredients.push(ingredient);
@@ -149,33 +152,24 @@ export class Search {
   }
 
   private classify(imageURI: string) {
-    this.presentLoading('Classifying image...');
+    this.helper.showLoading('Classifying image...');
     this.watson.classify(imageURI).then(
       classes => {
-        this.dismissLoading();
+        this.helper.dismissLoading();
         if (classes.length > 1) {
           let ingredients = new Array<string>();
           classes.forEach(c => {
+            console.log(c);
               ingredients.push(this.helper.capitalizeFirstLetter(c.class));
           });
           this.chooseIngredient(ingredients);
-        } else {
+        } else if (classes.length == 0) {
           this.getIngredient(classes[0].class);
         }
       },
       err => {
-        console.error(err);
-        this.dismissLoading();
-        let alert = this.alertCtrl.create({
-          title: "Sorry, the image couldn't be recognized",
-          buttons: [
-            {
-              text: 'Ok',
-              handler: () => {}
-            }
-          ]
-        });
-        alert.present();
+        this.helper.dismissLoading();
+        this.helper.showAlert("Sorry, the image couldn't be recognized");
       }
     );
   }
@@ -186,37 +180,32 @@ export class Search {
       inputs.push({
         type: 'radio',
         label: ingredient,
-        value: ingredient,
+        value: ingredient
       });
     });
-    let prompt = this.alertCtrl.create({
-      title: 'Choose the right option',
-      inputs: inputs,
-      buttons: [
-        {
-          text: 'Cancel',
-          handler: data => {}
-        },
-        {
-          text: 'Ok',
-          handler: data => {
+    let buttons = [
+      {
+        text: 'Cancel',
+        role: 'cancel'
+      },
+      {
+        text: 'Ok',
+        handler: data => {
+          if (data) {
             this.getIngredient(data);
+          } else {
+            let buttons = [
+              {
+                text: 'Ok',
+                handler: () => {this.chooseIngredient(ingredients)}
+              }
+            ];
+            this.helper.showAlert('Please select an ingredient!', buttons);
           }
         }
-      ]
-    });
-    prompt.present();
-  }
-
-  private presentLoading(content: string) {
-    this.loading = this.loadingCtrl.create({
-      content: content
-    });
-    this.loading.present();
-  }
-
-  private dismissLoading() {
-    this.loading.dismiss();
+      }
+    ];
+    this.helper.showAlert('Choose the right option', buttons, inputs);
   }
 
 }
