@@ -6,7 +6,8 @@ CognCook
 
 ### Prerequisites
 
-
+*
+*
 
 ### Installing
 
