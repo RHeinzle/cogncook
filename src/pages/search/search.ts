@@ -163,7 +163,7 @@ export class Search {
               ingredients.push(this.helper.capitalizeFirstLetter(c.class));
           });
           this.chooseIngredient(ingredients);
-        } else if (classes.length == 0) {
+        } else if (classes.length == 1) {
           this.getIngredient(classes[0].class);
         }
       },
