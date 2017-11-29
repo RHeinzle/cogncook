@@ -52,7 +52,6 @@ export class WatsonService {
       const filterUnwantedClassesFood = ['accessory fruit', 'alcoholic beverage', 'beverage', 'condiment', 'dairy product', 'delicacy', 'food seasoning', 'non-food', 'pet food', 'snack food', 'spread', 'sweet'];
       const filterTypeHierarchyDefault = ['animal', 'food', 'fruit', 'fungus', 'nature', 'plant'];
       let classes: Array<any> = new Array();
-
       classifiers.forEach(classifier => {
         switch (classifier.classifier_id) {
           case 'food': {
@@ -69,7 +68,7 @@ export class WatsonService {
             Array.prototype.push.apply(classes,
               classifier.classes.filter(classe => {
                 return filterTypeHierarchyDefault.some(function (element) {
-                    if (classe.type_hierarchy != null){
+                    if (classe.type_hierarchy != null) {
                       return classe.type_hierarchy.startsWith('/' + element);
                     }
                 });
@@ -79,7 +78,6 @@ export class WatsonService {
           }
         }
       });
-
       classes.sort(function(a,b){return b.score - a.score});
       classes = classes.filter((obj, pos, arr) => {
         return arr.map(mapObj => mapObj.class).indexOf(obj.class) === pos;
