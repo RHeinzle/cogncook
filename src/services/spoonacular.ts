@@ -22,7 +22,7 @@ export class SpoonacularService {
       const endpoint = '/recipes/searchComplex';
 
       let params = new URLSearchParams();
-      params.set('number', '3');
+      params.set('number', '5');
       params.set('includeIngredients', ingredients);
       params.set('cuisine', cuisine);
       params.set('diet', diet);

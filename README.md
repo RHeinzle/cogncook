@@ -1,6 +1,4 @@
-# Project Title
-
-CognCook
+# CognCook
 
 ## Getting Started
 
