@@ -69,10 +69,12 @@ export class SpoonacularService {
           });
 
           let instructions = new Array<Instruction>();
-          result.analyzedInstructions[0].steps.forEach(result => {
-              let instruction = new Instruction(result.number, result.step);
-              instructions.push(instruction);
-          });
+          if (result.analyzedInstructions.length > 0) {
+            result.analyzedInstructions[0].steps.forEach(result => {
+                let instruction = new Instruction(result.number, result.step);
+                instructions.push(instruction);
+            });
+          }
 
           let nutrients = new Array<Nutrient>();
           result.nutrition.nutrients.forEach(result => {
