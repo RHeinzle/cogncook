@@ -63,6 +63,10 @@
           </ion-select>
         </ion-item>
         <ion-item>
+          <ion-label>Max. Calories</ion-label>
+          <ion-input [(ngModel)]="maxCalories" type="number"></ion-input>
+        </ion-item>
+        <ion-item>
           <button ion-button small full color="primary" (click)="getRecipes()" [disabled]="!ingredients.length">I'm Hungry!</button>
         </ion-item>
       </div>

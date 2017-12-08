@@ -18,7 +18,7 @@ export class SpoonacularService {
       this.headers.append('X-Mashape-Key', SpoonacularService.key);
     }
 
-    getRecipes(ingredients: string, cuisine: string, diet: string, intolerances: string): Observable<Array<Recipe>> {
+    getRecipes(ingredients: string, cuisine: string, diet: string, intolerances: string, maxCalories: number): Observable<Array<Recipe>> {
       const endpoint = '/recipes/searchComplex';
 
       let params = new URLSearchParams();
@@ -29,6 +29,7 @@ export class SpoonacularService {
       if (ingredients != '' || cuisine != '' || diet != '') {
           params.set('intolerances', intolerances);
       }
+      params.set('maxCalories', maxCalories.toString());
 
       const url = SpoonacularService.host + endpoint + "?" + params.toString();
 

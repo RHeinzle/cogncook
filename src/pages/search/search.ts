@@ -24,6 +24,7 @@ export class Search {
   cuisine: Cuisine;
   intolerances: Array<Intolerance>;
   diet: Diet;
+  maxCalories: number;
 
   cuisineOptions: Array<Cuisine>;
   intoleranceOptions: Array<Intolerance>;
@@ -94,7 +95,8 @@ export class Search {
       this.spoonacular.getRecipes(this.helper.join(this.ingredients.map(ingredients => ingredients.name)),
                                   this.cuisine.name,
                                   this.diet.name,
-                                  this.helper.join(this.intolerances.map(intolerances => intolerances.name))
+                                  this.helper.join(this.intolerances.map(intolerances => intolerances.name)),
+                                  this.maxCalories
                                 ).subscribe(
           data => {
               this.recipes = data;
