@@ -29,7 +29,9 @@ export class SpoonacularService {
       if (ingredients != '' || cuisine != '' || diet != '') {
           params.set('intolerances', intolerances);
       }
-      params.set('maxCalories', maxCalories.toString());
+      if (maxCalories != '') {
+          params.set('maxCalories', maxCalories.toString());
+      }
 
       const url = SpoonacularService.host + endpoint + "?" + params.toString();
 
